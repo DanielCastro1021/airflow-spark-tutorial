@@ -1,0 +1,51 @@
+# Git
+.git
+
+# Environment
+.env
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+*.so
+
+# Airflow
+airflow_settings.yaml
+airflow-webserver.pid
+webserver_config.py
+airflow.cfg
+airflow.db
+logs/
+dags/__pycache__/
+plugins/__pycache__/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+.venv/
+.venv.bak/
+.venv.bak2/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# IntelliJ IDEA
+.idea/
+
+# Astro
+astro

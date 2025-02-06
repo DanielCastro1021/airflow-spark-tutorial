@@ -1,0 +1,63 @@
+services:
+  spark-master:
+    image: bitnami/spark:latest
+    container_name: spark-master
+    hostname: spark-master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_MASTER_WEBUI_PORT=8083 # Changed port to avoid conflict
+      - SPARK_RPC_MESSAGE_MAXSIZE=2047
+      - SPARK_DRIVER_MEMORY=2g
+      - SPARK_DRIVER_HOST=spark-master
+      - SPARK_SUBMIT_ARGS=--conf spark.driver.port=7078 --conf spark.driver.bindAddress=0.0.0.0 --conf spark.dynamicAllocation.enabled=false
+    ports:
+      - "8083:8083" # Spark Master Web UI
+      - "7077:7077" # Spark Master Port
+      - "7078:7078" # Spark Driver Port
+    networks:
+      - spark-network
+
+  spark-worker-1:
+    image: bitnami/spark:latest
+    container_name: spark-worker-1
+    hostname: spark-worker-1
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_WEBUI_PORT=9091
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=2
+      - SPARK_RPC_MESSAGE_MAXSIZE=2047
+    depends_on:
+      - spark-master
+    ports:
+      - "9091:9091" # Spark Worker Web UI
+    networks:
+      - spark-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  spark-worker-2:
+    image: bitnami/spark:latest
+    container_name: spark-worker-2
+    hostname: spark-worker-2
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_WEBUI_PORT=9092
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=2
+      - SPARK_RPC_MESSAGE_MAXSIZE=2047
+    depends_on:
+      - spark-master
+    ports:
+      - "9092:9092" # Spark Worker Web UI
+    networks:
+      - spark-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  spark-network:
+    driver: bridge
